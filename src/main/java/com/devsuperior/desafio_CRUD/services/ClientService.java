@@ -20,13 +20,36 @@ public class ClientService {
     public ClientDTO findById(Long id){
         Optional<Client> result = clientRepository.findById(id);
         return result
-                .map(client -> new ClientDTO(client.getId(), client.getName(), client.getCpf(), client.getIncome(), client.getBirthDate(), client.getChildren()))
+                .map(this::convertClientToDTO)
                 .orElseThrow(() -> new ClientNotFoundException("Cliente inexistente."));
     }
 
     public Page<ClientDTO> findAll(Pageable pageable){
         Page<Client> clients = clientRepository.findAll(pageable);
-        return clients.map(client -> new ClientDTO(client.getId(), client.getName(), client.getCpf(), client.getIncome(), client.getBirthDate(), client.getChildren()));
+        return clients.map(this::convertClientToDTO);
+    }
+
+    public ClientDTO insert(ClientDTO clientDTO){
+        Client client = clientRepository.save(convertDTOToClient(clientDTO));
+        return convertClientToDTO(client);
+    }
+
+    private Client convertDTOToClient(ClientDTO clientDTO){
+        return new Client(clientDTO.getId(),
+                clientDTO.getName(),
+                clientDTO.getCpf(),
+                clientDTO.getIncome(),
+                clientDTO.getBirthDate(),
+                clientDTO.getChildren());
+    }
+
+    private ClientDTO convertClientToDTO(Client client){
+        return new ClientDTO(client.getId(),
+                client.getName(),
+                client.getCpf(),
+                client.getIncome(),
+                client.getBirthDate(),
+                client.getChildren());
     }
 
 }
