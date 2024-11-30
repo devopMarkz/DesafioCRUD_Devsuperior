@@ -1,13 +1,19 @@
 package com.devsuperior.desafio_CRUD.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.PastOrPresent;
+
 import java.time.LocalDate;
 
 public class ClientDTO {
 
     private Long id;
+    @NotBlank(message = "Nome não pode estar nulo ou vazio.")
     private String name;
     private String cpf;
     private Double income;
+    @Past(message = "Deve ser uma data passada.")
     private LocalDate birthDate;
     private Integer children;
 

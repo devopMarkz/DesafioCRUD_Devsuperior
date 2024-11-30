@@ -2,6 +2,7 @@ package com.devsuperior.desafio_CRUD.controllers;
 
 import com.devsuperior.desafio_CRUD.dto.ClientDTO;
 import com.devsuperior.desafio_CRUD.services.ClientService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,7 +34,7 @@ public class ClientController {
     }
 
     @PostMapping
-    public ResponseEntity<ClientDTO> insert(@RequestBody ClientDTO clientDTO){
+    public ResponseEntity<ClientDTO> insert(@Valid @RequestBody ClientDTO clientDTO){
         clientDTO = clientService.insert(clientDTO);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
