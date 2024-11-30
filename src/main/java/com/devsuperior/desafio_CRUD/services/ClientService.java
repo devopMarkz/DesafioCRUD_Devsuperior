@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
@@ -40,11 +41,21 @@ public class ClientService {
 
     @Transactional
     public ClientDTO update(Long id, ClientDTO clientDTO){
-        if(!clientRepository.existsById(id)) throw new ClientNotFoundException("Cliente inexistente.");
+        validateClientExistenceById(id);
         Client client = clientRepository.getReferenceById(id);
         updateClientData(client, clientDTO);
         clientRepository.save(client);
         return convertClientToDTO(client);
+    }
+
+    @Transactional
+    public void delete(Long id){
+        validateClientExistenceById(id);
+        clientRepository.deleteById(id);
+    }
+
+    private void validateClientExistenceById(Long id){
+        if(!clientRepository.existsById(id)) throw new ClientNotFoundException("Cliente inexistente.");
     }
 
     private void updateClientData(Client client, ClientDTO clientDTO){
